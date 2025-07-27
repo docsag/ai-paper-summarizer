@@ -55,44 +55,49 @@ def fetch_metadata_from_semantic_scholar(doi):
         return {}
 
 def summarize_paper_from_doi(doi):
-    print(f"\nProcessing DOI: {doi}")
+    print(f"\n📥 Processing DOI: {doi}")
     oa_info = get_open_access_pdf(doi)
     if not oa_info or not oa_info.get("pdf_url"):
-        print("No open access PDF found.")
+        print("❌ No open access PDF found.")
         return
 
     pdf_url = oa_info["pdf_url"]
     pdf_path = f"temp_{doi.replace('/', '_')}.pdf"
     if not download_pdf(pdf_url, pdf_path):
+        print("❌ Failed to download PDF.")
         return
 
+    print("✅ PDF downloaded. Extracting sections...")
     sections = extract_sections_from_pdf(pdf_path)
     os.remove(pdf_path)
 
     summaries = {}
-    print("\nSummarized Sections:")
+    print(f"📄 Found {len(sections)} sections. Summarizing...")
     for name, text in sections.items():
         if text.strip():
             summary = summarize_section(name, text)
             summaries[name] = summary
-            print(f"\n--- {name.upper()} ---\n{summary}\n")
+            print(f"📝 Summary for '{name}': {summary[:100]}...")
 
     metadata = fetch_metadata_from_semantic_scholar(doi)
     metadata["doi"] = doi
     metadata["summarized_at"] = datetime.utcnow().isoformat()
     metadata["summaries"] = summaries
 
-    insert_summary(metadata)
+    print("📦 Metadata ready:")
+    print(json.dumps(metadata, indent=2))
 
+    print("📥 Inserting into DB...")
+    insert_summary(metadata)
+    print("✅ Summary inserted into database!")
+
+    # Optional local write
     txt_filename = os.path.join(OUTPUT_DIR, f"{doi.replace('/', '_')}.txt")
     with open(txt_filename, "w", encoding="utf-8") as f:
         f.write(f"DOI: {doi}\n")
-        if metadata.get("title"):
-            f.write(f"Title: {metadata['title']}\n")
-        if metadata.get("year"):
-            f.write(f"Year: {metadata['year']}\n")
-        if metadata.get("journal"):
-            f.write(f"Journal: {metadata['journal']}\n")
+        for k in ("title", "year", "journal"):
+            if metadata.get(k):
+                f.write(f"{k.capitalize()}: {metadata[k]}\n")
         f.write("\n")
         for name, summary in summaries.items():
             f.write(f"--- {name.upper()} ---\n{summary}\n\n")
@@ -100,14 +105,3 @@ def summarize_paper_from_doi(doi):
     json_filename = os.path.join(OUTPUT_DIR, f"{doi.replace('/', '_')}.json")
     with open(json_filename, "w", encoding="utf-8") as jf:
         json.dump(metadata, jf, indent=2)
-
-def summarize_multiple_papers(dois):
-    for doi in dois:
-        summarize_paper_from_doi(doi)
-
-if __name__ == "__main__":
-    dois = [
-        "10.1038/s41586-020-2649-2",
-        "10.1126/science.abd4570"
-    ]
-    summarize_multiple_papers(dois)
