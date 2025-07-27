@@ -10,7 +10,7 @@ write a layperson-friendly summary. Avoid jargon, explain concepts clearly, and 
 SECTION TYPE: {section_name}
 
 TEXT:
-"""{section_text}"""
+{section_text}
 
 SUMMARY:
 """
