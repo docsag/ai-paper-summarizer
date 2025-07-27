@@ -4,7 +4,7 @@ import sqlite3
 import os
 import json
 from pathlib import Path
-from main import summarize_paper_from_doi
+from core import summarize_paper_from_doi
 from parse.pdf_parser import extract_sections_from_pdf
 from summarize.summarizer import summarize_section
 
