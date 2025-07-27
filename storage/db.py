@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 import os  # ✅ Needed for creating directories
 
-DB_PATH = Path("output/summaries.db")
+DB_PATH = Path(__file__).resolve().parent.parent / "output" / "summaries.db"
 
 # ✅ Fix: Make sure output/ directory exists BEFORE using it
 os.makedirs(DB_PATH.parent, exist_ok=True)
