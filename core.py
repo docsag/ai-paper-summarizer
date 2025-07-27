@@ -5,6 +5,10 @@ import os
 current_dir = os.path.dirname(os.path.abspath(__file__))
 if current_dir not in sys.path:
     sys.path.append(current_dir)
+    # Explicitly add 'summarize' to path in case it's not found
+summarize_path = os.path.abspath(os.path.join(current_dir, "summarize"))
+if summarize_path not in sys.path:
+    sys.path.append(summarize_path)
 from search.semantic_scholar import search_papers
 from fetch.unpaywall import get_open_access_pdf
 from parse.pdf_parser import extract_sections_from_pdf
