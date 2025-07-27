@@ -7,7 +7,6 @@ from pathlib import Path
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 from core import summarize_paper_from_doi
-from core import summarize_paper_from_doi
 from parse.pdf_parser import extract_sections_from_pdf
 from summarize.summarizer import summarize_section
 
