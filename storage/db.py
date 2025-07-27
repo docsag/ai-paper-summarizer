@@ -5,10 +5,10 @@ import os  # ✅ Needed for creating directories
 
 DB_PATH = Path("output/summaries.db")
 
-# ✅ Ensure the output/ folder exists
+# ✅ Fix: Make sure output/ directory exists BEFORE using it
 os.makedirs(DB_PATH.parent, exist_ok=True)
 
-# ✅ Now safe to open the DB file
+# ✅ Now open the DB safely
 conn = sqlite3.connect(DB_PATH)
 c = conn.cursor()
 c.execute("""
