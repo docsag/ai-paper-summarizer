@@ -62,7 +62,7 @@ def summarize_paper_from_doi(doi):
         return
 
     pdf_url = oa_info["pdf_url"]
-    pdf_path = f"temp_{doi.replace('/', '_')}.pdf"
+    pdf_path = os.path.join(OUTPUT_DIR, f"temp_{doi.replace('/', '_')}.pdf")
     if not download_pdf(pdf_url, pdf_path):
         return
 
@@ -110,6 +110,8 @@ def summarize_paper_from_doi(doi):
     json_path = os.path.join(OUTPUT_DIR, f"{doi.replace('/', '_')}.json")
     with open(json_path, "w", encoding="utf-8") as jf:
         json.dump(metadata, jf, indent=2)
+
+    print(f"📁 Summary saved to:\n- {txt_path}\n- {json_path}")
 
 def summarize_multiple_papers(dois):
     for doi in dois:
