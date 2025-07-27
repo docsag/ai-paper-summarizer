@@ -21,6 +21,24 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 st.set_page_config(page_title="AI Paper Summarizer", layout="wide")
 st.title("📄 AI Paper Summarizer")
 
+# ─── Debug Block: Check if summaries exist in DB ───
+st.subheader("🧪 Debug: DB Check")
+
+try:
+    conn = sqlite3.connect(DB_PATH)
+    cursor = conn.cursor()
+    cursor.execute("SELECT doi, title, year, journal FROM summaries")
+    rows = cursor.fetchall()
+    conn.close()
+
+    if rows:
+        for row in rows:
+            st.write("✔ Summary in DB:", row)
+    else:
+        st.warning("⚠ No summaries found in DB.")
+except Exception as e:
+    st.error(f"❌ DB query failed: {e}")
+# ───────────────────────────────────────────────────
 # ---- Sidebar: Input Section ----
 st.sidebar.header("🔍 Input Options")
 
