@@ -1,4 +1,10 @@
+import sys
+import os
 
+# Ensure the root directory (where core.py is) is in sys.path
+current_dir = os.path.dirname(os.path.abspath(__file__))
+if current_dir not in sys.path:
+    sys.path.append(current_dir)
 from search.semantic_scholar import search_papers
 from fetch.unpaywall import get_open_access_pdf
 from parse.pdf_parser import extract_sections_from_pdf
