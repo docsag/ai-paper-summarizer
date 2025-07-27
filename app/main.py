@@ -6,6 +6,10 @@ import json
 from pathlib import Path
 import sys, os
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# Explicitly add the 'summarize' module folder to Python path
+summarize_path = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "summarize"))
+if summarize_path not in sys.path:
+    sys.path.append(summarize_path)
 from core import summarize_paper_from_doi
 from parse.pdf_parser import extract_sections_from_pdf
 from summarize.summarizer import summarize_section
